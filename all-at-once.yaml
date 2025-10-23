@@ -1,6 +1,5 @@
 # Docker Compose for All-At-Once Code Clone Detection
 
-version: "3.8"
 services:
   clone-detector:
     image: cljdetector
@@ -14,11 +13,55 @@ services:
       DBHOST: dbstorage
       SOURCEDIRtest: "/usr/src/app/test/data"
       SOURCEDIReclipse: "/QualitasCorpus/QualitasCorpus-20130901r/Systems/eclipse_SDK"
-      SOURCEDIR: "/QualitasCorpus"
+      SOURCEDIR: "/QualitasCorpus-20130901r"
       CHUNKSIZE: 20
+    networks:
+      - clone-detection-network
+
+  MonitorTool:
+    image: monitor:latest
+    ports:
+      - "7003:7003"
+    container_name: MonitorTool
+    build:
+      context: ./Containers/cljdetector/monitor
+      dockerfile: Dockerfile
+    environment:
+      DBHOST: dbstorage
+      DBNAME: cloneDetector
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
+      FLASK_APP: monitor_app.py
+    command: ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=7003", "--reload"]
+    volumes:
+      - ./Containers/cljdetector/monitor/src/:/usr/src/app
+      - ./Containers/cljdetector/monitor/src/templates:/usr/src/app/templates
+    networks:
+      - clone-detection-network
+    depends_on:
+      - dbstorage
+  
+  dbpoller:
+    image: dbpoller:latest
+    container_name: dbpoller
+    build:
+      context: ./Containers/cljdetector/monitor/dbpoller
+      dockerfile: Dockerfile
+    environment:
+      DBHOST: dbstorage
+      DBNAME: cloneDetector
+      PYTHONBUFFERED: 1
+    command: ["python", "-u", "dbpoller.py"]
+    volumes:
+      - ./Containers/cljdetector/monitor/dbpoller:/usr/src/app
+    networks:
+      - clone-detection-network
+    depends_on:
+      - dbstorage
 
   dbstorage:
     image: mongo
+    container_name: dbstorage
     restart: always
     command: --quiet --syslog
     ports:
@@ -28,7 +71,13 @@ services:
     volumes:
       - dbstorage:/data/db
       - dbconfig:/data/configdb
-    
+    networks:
+      - clone-detection-network
+
+networks:
+  clone-detection-network:
+    driver: bridge
+
 volumes:
   dbstorage:
   dbconfig:

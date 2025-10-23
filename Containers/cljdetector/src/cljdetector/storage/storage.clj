@@ -8,13 +8,21 @@
 (def dbname "cloneDetector")
 (def partition-size 100)
 (def hostname (or (System/getenv "DBHOST") DEFAULT-DBHOST))
-(def collnames ["files"  "chunks" "candidates" "clones"])
+(def collnames ["files"  "chunks" "candidates" "clones" "statusUpdates"])
 
 (defn print-statistics []
   (let [conn (mg/connect {:host hostname})        
         db (mg/get-db conn dbname)]
     (doseq [coll collnames]
       (println "db contains" (mc/count db coll) coll))))
+
+(defn addUpdate! [timestamp]
+  (let [conn (mg/connect {:host hostname})        
+        db (mg/get-db conn dbname)
+        collname "statusUpdates"]
+    (mc/insert db collname {:timestamp timestamp})
+  )
+)
 
 (defn clear-db! []
   (let [conn (mg/connect {:host hostname})        

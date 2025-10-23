@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: monitor:latest
+    ports:
+      - "7003:7003"
+    environment:
+      - DBHOST: dbstorage
+      - DBNAME: cljdetector
+    
+    volumes:
+      - ./src/:/usr/src/app
+
+  
+

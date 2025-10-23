@@ -31,6 +31,15 @@ if [[ "$1" == "TEST" ]]; then
   sleep 10
 fi
 
+if [[ "$1" == "TEST-ONLY" ]]; then
+  echo "Started with TEST-ONLY argument, first sending test files..."
+  while true; do
+    sendFile ./test/A.java
+    sendFile ./test/B.java
+    echo "Sent test files. Sleeping before continuing..."
+    sleep 10
+  done
+fi
 
 createFileList
 

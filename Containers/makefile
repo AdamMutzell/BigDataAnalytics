@@ -1,6 +1,6 @@
-all: corpusGetter codeStreamGenerator codeStreamConsumer cljDetector
+all: corpusGetters codeStreamGenerator codeStreamConsumer cljDetector
 
-corpusGetter:
+corpusGetters:
 	cd CorpusGetter && docker build -t corpusgetter .
 
 corpusGetterFull:

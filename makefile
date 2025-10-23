@@ -18,7 +18,10 @@ build-cg: corpusVolume
 	@cd ./Containers && make corpusGetterFull
 
 cljDetector: corpusVolume
-	@docker compose -f all-at-once.yaml up
+	@docker-compose -f all-at-once.yaml up --build
+
+monitor:
+	@docker compose -f Containers/cljdetector/monitor/docker-compose.yaml up
 
 mongodb:
 	@docker compose -f all-at-once.yaml up dbstorage

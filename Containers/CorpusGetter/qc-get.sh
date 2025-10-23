@@ -76,6 +76,7 @@ printCorpusStats() {
   echo "Number of files     :" $( find -type f | wc -l )
   echo "Number of Java files:"  $( find -type f -name "*.java" | wc -l )
   echo "Size of Java files  :" $( find -type f -name "*.java" -print0 | du -hc --files0-from - | tail -n1 )
+  echo "Size of tar files  :" $( find -type f -name "*.tar" -print0 | du -hc --files0-from - | tail -n1 )
 }
 
 # Start here
