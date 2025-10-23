@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env 
 
 # This should already be done in the build now.
 # --------------------
