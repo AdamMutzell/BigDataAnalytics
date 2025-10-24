@@ -10,7 +10,7 @@
 
 (defn ts-println [& args]
   (let [timestamp (.toString (java.time.LocalDateTime/now))]
-    (storage/addUpdate! timestamp)
+    (storage/addUpdate! timestamp (str args)) ;; Added method call to log status update to the database
     (println timestamp args)))
 
 (defn maybe-clear-db [args]

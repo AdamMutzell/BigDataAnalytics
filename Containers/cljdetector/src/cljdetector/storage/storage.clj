@@ -16,13 +16,11 @@
     (doseq [coll collnames]
       (println "db contains" (mc/count db coll) coll))))
 
-(defn addUpdate! [timestamp]
-  (let [conn (mg/connect {:host hostname})        
+(defn addUpdate! [timestamp message] ;; Added method to add the status update to the database
+  (let [conn (mg/connect {:host hostname})
         db (mg/get-db conn dbname)
         collname "statusUpdates"]
-    (mc/insert db collname {:timestamp timestamp})
-  )
-)
+    (mc/insert db collname {:timestamp timestamp, :message message})))
 
 (defn clear-db! []
   (let [conn (mg/connect {:host hostname})        

@@ -12,6 +12,24 @@
     <p>Database Host: {{ dbhost }}</p>
     <p>Database Name: {{ dbname }}</p>
     <p>Health Check: <span id="health-status">Unknown</span></p>
-    
+    <div>
+        <h2>Statistics</h2>
+        <p>Candidates per File: {{ candidates_per_file }}</p>
+        <p>Clones per File: {{ clones_per_file }}</p>
+        <p>Chunks per File: {{ chunks_per_file }}</p>
+        <p>Average Clone Size: {{ average_clone_size }}</p>
+    </div>
+    <div>
+        <h2>Timeline</h2>
+        <ul>
+            {% for update in status_updates %}
+                <li>{{ update.timestamp }} - {{ update.message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+        <img src="data:image/png;base64, {{ plot_url }}" alt="Database Status Plot">
+        <img src="data:image/png;base64, {{ deriv_plot_url }}" alt="Database Status Derivative Plot">
+    </div>
 </body>
 </html>

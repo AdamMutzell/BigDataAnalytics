@@ -13,7 +13,7 @@ services:
       DBHOST: dbstorage
       SOURCEDIRtest: "/usr/src/app/test/data"
       SOURCEDIReclipse: "/QualitasCorpus/QualitasCorpus-20130901r/Systems/eclipse_SDK"
-      SOURCEDIR: "/QualitasCorpus-20130901r"
+      SOURCEDIR: "/QualitasCorpus/QualitasCorpus-20130901r"
       CHUNKSIZE: 20
     networks:
       - clone-detection-network
@@ -36,6 +36,8 @@ services:
     volumes:
       - ./Containers/cljdetector/monitor/src/:/usr/src/app
       - ./Containers/cljdetector/monitor/src/templates:/usr/src/app/templates
+      - ./Containers/cljdetector/monitor/dbpoller/data.csv:/usr/src/app/dbpoller/data.csv
+      - ./Containers/cljdetector/monitor/dbpoller/status_updates.csv:/usr/src/app/dbpoller/status_updates.csv
     networks:
       - clone-detection-network
     depends_on:
@@ -58,6 +60,7 @@ services:
       - clone-detection-network
     depends_on:
       - dbstorage
+      - clone-detector
 
   dbstorage:
     image: mongo
